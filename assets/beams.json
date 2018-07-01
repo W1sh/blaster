@@ -1,0 +1,45 @@
+{
+"frames": {
+	"green_ball.png": {
+		"frame": {"x":79, "y":0, "w":21, "h":20},
+		"spriteSourceSize": {"x":0,"y":0,"w":21,"h":20},
+		"sourceSize": {"w":21,"h":20}
+	},
+	"purple_ball.png": {
+		"frame": {"x":57, "y":66, "w":21, "h":21},
+		"spriteSourceSize": {"x":0,"y":0,"w":21,"h":21},
+		"sourceSize": {"w":21,"h":21}
+	},
+	"yellow_ball.png": {
+		"frame": {"x":79, "y":21, "w":21, "h":21},
+		"spriteSourceSize": {"x":0,"y":0,"w":21,"h":21},
+		"sourceSize": {"w":21,"h":21}
+	},
+	"red_ball.png": {
+		"frame": {"x":57, "y":22, "w":21, "h":21},
+		"spriteSourceSize": {"x":0,"y":0,"w":21,"h":21},
+		"sourceSize": {"w":21,"h":21}
+	},
+	"teal_ball.png": {
+		"frame": {"x":57, "y":44, "w":21, "h":21},
+		"spriteSourceSize": {"x":0,"y":0,"w":21,"h":21},
+		"sourceSize": {"w":21,"h":21}
+	},
+	"blue_ball.png": {
+		"frame": {"x":57, "y":0, "w":21, "h":21},
+		"spriteSourceSize": {"x":0,"y":0,"w":21,"h":21},
+		"sourceSize": {"w":21,"h":21}
+	},
+	"laser.png": {
+		"frame": {"x":0, "y":0, "w":56, "h":97},
+		"spriteSourceSize": {"x":0,"y":0,"w":56,"h":97},
+		"sourceSize": {"w":56,"h":97}
+	}
+
+},
+"meta": {
+	"image": "beams.png",
+	"size": {"w": 101, "h": 98},
+	"scale": "1"
+}
+}

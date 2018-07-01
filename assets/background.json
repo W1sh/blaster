@@ -1,0 +1,31 @@
+{
+   "frames": {
+      "unique.png": {
+         "frame": {
+            "x": 0,
+            "y": 0,
+            "w": 1280,
+            "h": 800
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 1280,
+            "h": 800
+         },
+         "sourceSize": {
+            "w": 1280,
+            "h": 800
+         }
+      }
+
+   },
+   "meta": {
+      "image": "background.png",
+      "size": {
+         "w": 1281,
+         "h": 801
+      },
+      "scale": "1"
+   }
+}

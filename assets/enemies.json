@@ -1,0 +1,30 @@
+{
+"frames": {
+	"ships_biomech_22.png": {
+		"frame": {"x":41, "y":49, "w":34, "h":48},
+		"spriteSourceSize": {"x":0,"y":0,"w":34,"h":48},
+		"sourceSize": {"w":34,"h":48}
+	},
+	"ships_biomech_23.png": {
+		"frame": {"x":41, "y":0, "w":34, "h":48},
+		"spriteSourceSize": {"x":0,"y":0,"w":34,"h":48},
+		"sourceSize": {"w":34,"h":48}
+	},
+	"long.png": {
+		"frame": {"x":0, "y":33, "w":40, "h":29},
+		"spriteSourceSize": {"x":0,"y":0,"w":40,"h":29},
+		"sourceSize": {"w":40,"h":29}
+	},
+	"short.png": {
+		"frame": {"x":0, "y":0, "w":40, "h":32},
+		"spriteSourceSize": {"x":0,"y":0,"w":40,"h":32},
+		"sourceSize": {"w":40,"h":32}
+	}
+
+},
+"meta": {
+	"image": "enemies_01.png",
+	"size": {"w": 76, "h": 98},
+	"scale": "1"
+}
+}

@@ -1,0 +1,175 @@
+{
+   "frames": {
+      "one_blue.png": {
+         "frame": {
+            "x": 100,
+            "y": 228,
+            "w": 99,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 99,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 99,
+            "h": 75
+         }
+      },
+      "one_green.png": {
+         "frame": {
+            "x": 0,
+            "y": 228,
+            "w": 99,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 99,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 99,
+            "h": 75
+         }
+      },
+      "one_red.png": {
+         "frame": {
+            "x": 113,
+            "y": 0,
+            "w": 99,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 99,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 99,
+            "h": 75
+         }
+      },
+      "two_blue.png": {
+         "frame": {
+            "x": 0,
+            "y": 0,
+            "w": 112,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 112,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 112,
+            "h": 75
+         }
+      },
+      "two_green.png": {
+         "frame": {
+            "x": 0,
+            "y": 76,
+            "w": 112,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 112,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 112,
+            "h": 75
+         }
+      },
+      "two_red.png": {
+         "frame": {
+            "x": 0,
+            "y": 152,
+            "w": 112,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 112,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 112,
+            "h": 75
+         }
+      },
+      "three_blue.png": {
+         "frame": {
+            "x": 113,
+            "y": 76,
+            "w": 98,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 98,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 98,
+            "h": 75
+         }
+      },
+      "three_green.png": {
+         "frame": {
+            "x": 113,
+            "y": 152,
+            "w": 98,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 98,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 98,
+            "h": 75
+         }
+      },
+      "three_red.png": {
+         "frame": {
+            "x": 200,
+            "y": 228,
+            "w": 98,
+            "h": 75
+         },
+         "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 98,
+            "h": 75
+         },
+         "sourceSize": {
+            "w": 98,
+            "h": 75
+         }
+      }
+
+   },
+   "meta": {
+      "image": "playerships.png",
+      "size": {
+         "w": 299,
+         "h": 304
+      },
+      "scale": "1"
+   }
+}
