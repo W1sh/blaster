@@ -2,6 +2,9 @@ var Enemy = Entity.extend(function () {
     this.currState = undefined; // estado atual;
     this.type = undefined;
     this.health = 0;
+    this.fireCooldown = 0;
+    this.value = 0;
+    this.interval = undefined;
     var _this = this;
     var canFire = false;
 
@@ -18,10 +21,13 @@ var Enemy = Entity.extend(function () {
         this.type = skin;
         if (skin === "short") {
             this.currState = this.states.short;
-            this.health = 20;
+            this.health = 40;
+            this.value = 50;
         } else if (skin === "long") {
             this.currState = this.states.long;
-            this.health = 40;
+            this.health = 20;
+            this.fireCooldown = 100;
+            this.value = 75;
         }
         this.rotation = 0;
         this.currentFrame = 0;

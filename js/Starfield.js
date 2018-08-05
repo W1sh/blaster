@@ -16,7 +16,7 @@ var Starfield = function (canvas) {
             star = {
                 x: Math.random() * canv.width,
                 y: Math.random() * canv.height,
-                z: Math.random() * canv.width
+                z: (Math.random() * 1000) + 500//Math.random() * canv.width
             };
             stars.push(star);
         }
@@ -25,7 +25,7 @@ var Starfield = function (canvas) {
     this.move = function () {
         for (i = 0; i < numStars; i++) {
             star = stars[i];
-            star.x -= 0.5;
+            star.x -= 0.2;
 
             if (star.x <= 0) {
                 star.x = canv.width;

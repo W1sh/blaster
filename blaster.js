@@ -1,7 +1,12 @@
 //jshint esversion: 6
 
+// fazer reverse time (maybe)
 window.onload = boot;
 
+var player;
+var timer = 0;
+var fpsCap = 1000 / 60;
+var fps = 0;
 var starfield;
 var entities = [];
 var enemies = [];
@@ -12,7 +17,7 @@ var paused = false;
 var interval;
 var animateBackground = true;
 var mouseX, mouseY;
-var drawInterval, updateInterval, spawnInterval;
+var drawInterval, updateInterval, spawnShortInterval, spawnLongInterval;
 var keydown = {
     left: false,
     right: false,
@@ -36,6 +41,11 @@ function boot() {
     canvasses.background.canvas = document.getElementById("background");
     canvasses.background.ctx = canvasses.background.canvas.getContext("2d");
 
+    canvasses.entities.canvas.width = window.innerWidth;
+    canvasses.entities.canvas.height = window.innerHeight;
+    canvasses.background.canvas.width = window.innerWidth;
+    canvasses.background.canvas.height = window.innerHeight;
+
     var spBackground = new SpriteSheet();
     spBackground.load("assets//background.png", "assets//background.json", loaded);
     var spNave = new SpriteSheet();
@@ -52,17 +62,19 @@ function loaded() {
     if (Object.keys(gSpriteSheets).length < 5) return;
 
     nave = new Starship(gSpriteSheets['assets//playerships.png'],
-        100, (canvasses.entities.canvas.height >> 1) - 37, "one_red");
+        100, (canvasses.entities.canvas.height >> 1) - 37, "one_green");
     nave.scale(0.4, 0.4);
     nave.rotation = 90;
-    var enemy = new Enemy(gSpriteSheets['assets//enemies.png'], 10, 10, "short");
+    /*var enemy = new Enemy(gSpriteSheets['assets//enemies.png'], 10, 10, "short");
     enemy.rotation = 0;
-    enemies.push(enemy);
+    enemies.push(enemy);*/
+
+    player = new Player(0, nave);
 
     starfield = new Starfield(canvasses.background.canvas);
     starfield.initialize();
     entities.push(nave);
-    entities.push(enemy);
+    //entities.push(enemy);
 
     canvasses.entities.canvas.addEventListener("mousemove", mouseMoveAction, false);
     canvasses.entities.canvas.addEventListener("mousedown", shootLasers, false);
@@ -77,10 +89,13 @@ function loaded() {
     window.addEventListener("keydown", onKeyAction, false);
     window.addEventListener("keyup", onKeyAction, false);
 
-    drawInterval = setInterval(draw, 10);
-    updateInterval = setInterval(update, 10);
-    spawnInterval = setInterval(function () {
+    drawInterval = setInterval(draw, fpsCap);
+    updateInterval = setInterval(update, fpsCap);
+    spawnShortInterval = setInterval(function () {
         randomSpawn("short");
+    }, 2000);
+    spawnLongInterval = setInterval(function () {
+        randomSpawn("long");
     }, 2000);
 }
 
@@ -105,12 +120,16 @@ function onKeyAction(e) {
         if (paused) {
             window.clearInterval(drawInterval);
             window.clearInterval(updateInterval);
-            window.clearInterval(spawnInterval);
+            window.clearInterval(spawnShortInterval);
+            window.clearInterval(spawnLongInterval);
         } else {
-            drawInterval = setInterval(draw, 10);
-            updateInterval = setInterval(update, 10);
-            spawnInterval = setInterval(function () {
+            drawInterval = setInterval(draw, fpsCap);
+            updateInterval = setInterval(update, fpsCap);
+            spawnShortInterval = setInterval(function () {
                 randomSpawn("short");
+            }, 2000);
+            spawnLongInterval = setInterval(function () {
+                randomSpawn("long");
             }, 2000);
         }
     }
@@ -126,7 +145,7 @@ function shootLasers(e) {
     if (paused) return;
     firing = (e.type === "mousedown");
     if (firing) {
-        var pew = new Laser(gSpriteSheets['assets//beams.png'], 0, 0, "red_ball");
+        var pew = new Laser(gSpriteSheets['assets//beams.png'], 0, 0, "green_ball");
         //pew.rotation = nave.rotation;
         pew.x = (nave.x + nave.width / 2) - pew.width / 2;
         pew.y = (nave.y + nave.height / 2) - pew.height / 2;
@@ -138,7 +157,7 @@ function shootLasers(e) {
         entities.push(pew);
         lasers.push(pew);
         interval = setInterval(function () {
-            var pew = new Laser(gSpriteSheets['assets//beams.png'], 0, 0, "red_ball");
+            var pew = new Laser(gSpriteSheets['assets//beams.png'], 0, 0, "green_ball");
             //pew.rotation = nave.rotation;
             pew.x = (nave.x + nave.width / 2) - pew.width / 2;
             pew.y = (nave.y + nave.height / 2) - pew.height / 2;
@@ -151,7 +170,7 @@ function shootLasers(e) {
             lasers.push(pew);
         }, 200);
     } else {
-        clearInterval(interval);
+        window.clearInterval(interval);
     }
 }
 
@@ -183,12 +202,31 @@ function checkColisions() {
             laser.bottom() < 0 || laser.top() > canvasses.entities.canvas.height) {
             laser.active = false;
         }
+        if (laser.hitTestCircle(nave) && laser.currState === laser.states.red_ball) {
+            laser.active = false;
+            if (!nave.invulnerable) {
+                nave.health--;
+                nave.invulnerable = true;
+            }
+            if (nave.health <= 0) {
+                nave.active = false;
+                var explosion = new Explosion(gSpriteSheets['assets//explosion.png'],
+                    nave.x, nave.y, nave.width, nave.height);
+                entities.push(explosion);
+                explosions.push(explosion);
+                setTimeout(endGame, 100);
+            }
+
+        }
+
         for (var enemy of enemies) {
-            if (laser.hitTestCircle(enemy)) {
+            if (laser.hitTestCircle(enemy) && laser.currState === laser.states.green_ball) {
                 if (enemy.health - laser.damage <= 0) {
                     var explosion = new Explosion(gSpriteSheets['assets//explosion.png'],
                         enemy.x, enemy.y, enemy.width, enemy.height);
                     enemy.active = false;
+                    if (enemy.type === "long") window.clearInterval(enemy.interval);
+                    player.score += enemy.value;
                     entities.push(explosion);
                     explosions.push(explosion);
                 } else {
@@ -215,49 +253,78 @@ function checkColisions() {
             var enemyExplosion = new Explosion(gSpriteSheets['assets//explosion.png'],
                 enemy.x, enemy.y, enemy.width, enemy.height);
             enemy.active = false;
+            if (enemy.type === "long") window.clearInterval(enemy.interval);
             entities.push(enemyExplosion);
             explosions.push(enemyExplosion);
-            var playerExplosion = new Explosion(gSpriteSheets['assets//explosion.png'],
-                nave.x, nave.y, nave.width, nave.height);
-            nave.active = false;
-            entities.push(playerExplosion);
-            explosions.push(playerExplosion);
-            setTimeout(endGame, 100);
+
+            if (!nave.invulnerable) {
+                nave.health--;
+                nave.invulnerable = true;
+            }
+            if (nave.health <= 0) {
+                var playerExplosion = new Explosion(gSpriteSheets['assets//explosion.png'],
+                    nave.x, nave.y, nave.width, nave.height);
+                nave.active = false;
+                entities.push(playerExplosion);
+                explosions.push(playerExplosion);
+                setTimeout(endGame, 100);
+            }
         }
     }
 }
 
 function draw() {
+    timer++;
+    fps++;
+    canvasses.entities.ctx.clearRect(0, 0, canvasses.entities.canvas.width, canvasses.entities.canvas.height);
     if (animateBackground) {
         starfield.move();
         starfield.draw();
     }
+    canvasses.entities.ctx.font = "20px Arial";
+    canvasses.entities.ctx.fillStyle = "white";
+    canvasses.entities.ctx.fillText("FPS: " + Math.floor(fps / Math.floor(timer / 60)) +
+        " Entities: " + entities.length + " Score: " + player.score, 10, 30);
 
-    canvasses.entities.ctx.clearRect(0, 0, canvasses.entities.canvas.width, canvasses.entities.canvas.height);
     for (var i = 0; i < entities.length; i++) {
         entities[i].update();
         entities[i].render(canvasses.entities.ctx);
-        entities[i].drawColisionBoundaries(canvasses.entities.ctx, true, false, "blue", "red");
+        //entities[i].drawColisionBoundaries(canvasses.entities.ctx, true, false, "blue", "red");
     }
 }
 
 function randomSpawn(enemyType) {
-    random = Math.floor(Math.random() * Math.floor(2));
     var x, y;
+    var random = (enemyType === "short") ? Math.floor(Math.random() * 2) : 1;
     if (random === 0) {
+        random = Math.floor(Math.random() * 2);
         x = Math.floor(Math.random() * Math.floor(canvasses.entities.canvas.width)) + 10;
-        y = 10;
+        y = (random === 0) ? 10 : canvasses.entities.canvas.height - 10;
     } else {
-        x = 10;
+        random = Math.floor(Math.random() * 2);
+        x = (random === 0) ? 10 : canvasses.entities.canvas.width - 10;
         y = Math.floor(Math.random() * Math.floor(canvasses.entities.canvas.height)) + 10;
     }
     var enemy = new Enemy(gSpriteSheets['assets//enemies.png'], x, y, enemyType);
-    enemy.rotate(nave.x, nave.y, 90);
-    var dx = nave.x - (enemy.x + enemy.width / 2);
-    var dy = nave.y - (enemy.y + enemy.height / 2);
-    var mag = Math.sqrt(dx * dx + dy * dy);
-    enemy.vx = (dx / mag) * 2;
-    enemy.vy = (dy / mag) * 2;
+    if (enemyType === "short") {
+        enemy.rotate(nave.x, nave.y, 90);
+        var dx = nave.x - (enemy.x + enemy.width / 2);
+        var dy = nave.y - (enemy.y + enemy.height / 2);
+        var mag = Math.sqrt(dx * dx + dy * dy);
+        enemy.vx = (dx / mag) * 2;
+        enemy.vy = (dy / mag) * 2;
+    } else if (enemyType === "long") {
+        enemy.vx = (enemy.x > 10) ? -2 : 2;
+        enemy.rotation = (enemy.x > 10) ? 270 : 90;
+        enemy.vy = 0;
+        enemy.interval = setInterval(function () {
+            var pew = new Laser(gSpriteSheets['assets//beams.png'], enemy.x + enemy.width / 2,
+                enemy.y + enemy.height / 2, "red_ball");
+            pew.vx = enemy.vx > 0 ? 5 : -5;
+            entities.push(pew);
+            lasers.push(pew);
+        }, 1000);
+    }
     enemies.push(enemy);
     entities.push(enemy);
 }
@@ -269,7 +336,8 @@ function endGame() {
     explosions = [];
     window.clearInterval(drawInterval);
     window.clearInterval(updateInterval);
-    window.clearInterval(spawnInterval);
+    window.clearInterval(spawnShortInterval);
+    window.clearInterval(spawnLongInterval);
     alert("Game over");
     document.location.reload();
 }

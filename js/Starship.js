@@ -1,6 +1,11 @@
 var Starship = Entity.extend(function () {
     var _this = this;
+    this.health = 3;
     this.currState = undefined; // estado atual;
+    this.invulnerable = false;
+    this.invulnerableTime = 3;
+    this.invisivel=false;
+    this.cont=0;    
     this.states = {
         one_blue: 'one_blue',
         one_green: 'one_green',
@@ -18,23 +23,23 @@ var Starship = Entity.extend(function () {
         this.spriteSheet = spriteSheet;
         this.x = x;
         this.y = y;
-        if(skin === "one_blue"){
+        if (skin === "one_blue") {
             this.currState = this.states.one_blue;
-        }else if(skin === "one_green"){
+        } else if (skin === "one_green") {
             this.currState = this.states.one_green;
-        }else if(skin === "one_red"){
+        } else if (skin === "one_red") {
             this.currState = this.states.one_red;
-        }else if(skin === "two_blue:"){
+        } else if (skin === "two_blue:") {
             this.currState = this.states.two_blue;
-        }else if(skin === "two_green"){
+        } else if (skin === "two_green") {
             this.currState = this.states.two_green;
-        }else if(skin === "two_red"){
+        } else if (skin === "two_red") {
             this.currState = this.states.two_red;
-        }else if(skin === "three_blue"){
+        } else if (skin === "three_blue") {
             this.currState = this.states.three_blue;
-        }else if(skin === "three_green"){
+        } else if (skin === "three_green") {
             this.currState = this.states.three_green;
-        }else if(skin === "three_red"){
+        } else if (skin === "three_red") {
             this.currState = this.states.three_red;
         }
         this.rotation = 0;
@@ -43,17 +48,8 @@ var Starship = Entity.extend(function () {
     };
 
     this.rotate = function (x, y, addRotation) {
-        //console.log("Click do rato: " + x + " : " + y);
-        //console.log("Centro da nave: " + (this.x + this.width/2) + " : " + (this.y + this.height));
-        this.rotation = (Math.atan2((y - this.height/2) - this.y, (x - this.width/2) - this.x) * 180 / Math.PI) + addRotation;
+        this.rotation = (Math.atan2((y - this.height / 2) - this.y, (x - this.width / 2) - this.x) * 180 / Math.PI) + addRotation;
     };
-
-    /*this.getShootingPositions = function(){
-        var positionX = this.x + Math.cos(this.rotation) * 10;
-        var positionY = this.y + Math.sin(this.rotation) * 10;
-        console.log("Centro da nave: " + (this.x + this.width/2) + " : " + (this.y + this.height/2));
-        return [positionX, positionY];
-    };*/
 
     function setup() {
         _this.eStates.one_blue = _this.spriteSheet.getStats('one_blue');
@@ -69,4 +65,42 @@ var Starship = Entity.extend(function () {
         _this.width = _this.frames[0].width;
         _this.height = _this.frames[0].height;
     }
+    this.render = function (ds) {
+        if (!this.active) return;
+        ds.save();
+        var sprite = this.getSprite();
+
+        ds.translate(Math.floor(this.x + (this.width / 2)),
+            Math.floor(this.y + (this.height / 2)));
+        ds.rotate(this.rotation * Math.PI / 180);
+
+        if (this.invulnerable) {
+            this.cont++;
+            if(this.cont< fpsCap*this.invulnerableTime){
+                if(this.cont % 5 === 0){
+                    this.invisivel = this.invisivel === true ? false : true;
+                }
+            // invulnerableTime * 60 = numero de frames desenhados, 
+            // invisivel  -> alpha -> invisivel -> alpha
+            if(this.invisivel){
+                ds.restore();
+                return;
+            }
+            ds.globalAlpha=0.5;
+            }else{
+                this.invisivel = false;
+                this.invulnerable = false;
+                this.cont = 0;
+            }
+        }
+
+        ds.drawImage(
+            this.spriteSheet.img,
+            sprite.x, sprite.y,
+            sprite.width, sprite.height,
+            Math.floor(-this.width / 2), Math.floor(-this.height / 2),
+            this.width * this.scaleFactor, this.height * this.scaleFactor
+        );
+        ds.restore();
+    };
 });

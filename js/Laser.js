@@ -44,7 +44,7 @@ var Laser = Entity.extend(function () {
                         this.currState = this.states.laser;
                         break;
             }
-            rot !== undefined ? this.rotation = rot : this.rotation = 90;
+            this.rotation = (rot !== undefined) ? rot : 90;
             this.currentFrame = 0;
             setup();
       };
@@ -61,49 +61,4 @@ var Laser = Entity.extend(function () {
             _this.width = _this.frames[0].width;
             _this.height = _this.frames[0].height;
       }
-
-      /*this.drawColisionBoundaries = function (ctx, boundingRect) {
-            if (ctx === undefined) return;
-
-            if (boundingRect) {
-                  ctx.save();
-                  ctx.beginPath();
-                  ctx.translate(this.x, this.y);
-                  ctx.rotate(this.rotation * Math.PI / 180);
-                  ctx.translate(-this.x, -this.y);
-                  ctx.rect(this.x, this.y, this.width, this.height);
-                  ctx.lineWidth = 1;
-                  ctx.strokeStyle = "blue";
-                  ctx.stroke();
-                  ctx.restore();
-            }
-      };*/
-
-      /*this.render = function (ds) {
-            if (!this.active) return;
-            ds.save();
-            var sprite = this.getSprite();
-
-            ds.translate(posicaoDisparo[0], posicaoDisparo[1]);
-            ds.rotate(nave.rotation * Math.PI / 180);
-            ds.strokeStyle = "yellow";
-            ds.strokeRect(-10 / 2, -10 / 2 + 25, 10, 10);
-            ds.restore();
-            ds.save();
-
-            ds.translate(this.x, this.y);
-            if (this.rotation != 0) {
-                  ds.rotate(this.rotation * Math.PI / 180);
-            }
-            ds.translate(-this.x, -this.y);
-
-            ds.drawImage(
-                  this.spriteSheet.img,
-                  sprite.x, sprite.y,
-                  sprite.width, sprite.height,
-                  this.x, this.y,
-                  this.width * this.scaleFactor, this.height * this.scaleFactor
-            );
-            ds.restore(); // repor o estado guardado
-      };*/
 });
