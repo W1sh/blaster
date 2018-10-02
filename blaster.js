@@ -82,7 +82,7 @@ function loaded() {
 
     barra = new Bar((canvasses.comp.canvas.width >> 2) + 200,
         canvasses.comp.canvas.height - 31, 200, 20, canvasses.comp.ctx, '',
-        "black", "black", "darkblue", player.energy);
+        "white", "white", "darkblue", player.energy);
 
     starfield = new Starfield(canvasses.background.canvas);
     starfield.initialize();
