@@ -1,6 +1,5 @@
 var Starship = Entity.extend(function () {
     var _this = this;
-    this.health = 3;
     this.currState = undefined; // estado atual;
     this.invulnerable = false;
     this.invulnerableTime = 3;
@@ -48,6 +47,9 @@ var Starship = Entity.extend(function () {
     };
 
     this.rotate = function (x, y, addRotation) {
+        console.log("X:" + x);
+        console.log("Y:" + y);
+        console.log("Rotation:" + addRotation);
         this.rotation = (Math.atan2((y - this.height / 2) - this.y, (x - this.width / 2) - this.x) * 180 / Math.PI) + addRotation;
     };
 
