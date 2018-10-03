@@ -82,7 +82,7 @@ function loaded() {
 
     barra = new Bar((canvasses.comp.canvas.width >> 2) + 200,
         canvasses.comp.canvas.height - 31, 200, 20, canvasses.comp.ctx, '',
-        "black", "black", "darkblue", player.energy);
+        "white", "white", "darkblue", player.energy);
 
     starfield = new Starfield(canvasses.background.canvas);
     starfield.initialize();
@@ -180,10 +180,15 @@ function shootLasers(e) {
         entities.push(pew);
         lasers.push(pew);
         player.energy -= 2;
+        components[0].update(player.energy);
     }
 }
 
 function update() {
+    /*setInterval(function() {
+        player.energy += player.energyRegeneration;
+        components[0].update(player.energy);
+    }, 1000);*/
     player.ship.rotate(mouseX, mouseY, 90);
     checkMovement();
     checkColisions();
