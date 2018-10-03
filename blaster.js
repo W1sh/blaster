@@ -18,7 +18,7 @@ var paused = false;
 var interval;
 var animateBackground = true;
 var mouseX, mouseY;
-var drawInterval, updateInterval, spawnShortInterval, spawnLongInterval;
+var drawInterval, updateInterval, spawnShortInterval, spawnLongInterval, energyRegenerationInterval;
 var keydown = {
     left: false,
     right: false,
@@ -111,6 +111,12 @@ function loaded() {
     spawnLongInterval = setInterval(function () {
         spawnEnemy("long");
     }, 2000);
+    energyRegenerationInterval = setInterval(function () {
+        if (player.energy + player.energyRegeneration <= 100){
+            player.energy += player.energyRegeneration;
+            components[0].update(player.energy);
+        }
+    }, 1000);
 }
 
 function onKeyAction(e) {
@@ -136,6 +142,7 @@ function onKeyAction(e) {
             window.clearInterval(updateInterval);
             window.clearInterval(spawnShortInterval);
             window.clearInterval(spawnLongInterval);
+            window.clearInterval(energyRegenerationInterval);
         } else {
             drawInterval = setInterval(draw, fpsCap);
             updateInterval = setInterval(update, fpsCap);
@@ -145,6 +152,10 @@ function onKeyAction(e) {
             spawnLongInterval = setInterval(function () {
                 spawnEnemy("long");
             }, 2000);
+            energyRegenerationInterval = setInterval(function () {
+                player.energy += player.energyRegeneration;
+                components[0].update(player.energy);
+            }, 1000);
         }
     }
 }
@@ -185,10 +196,6 @@ function shootLasers(e) {
 }
 
 function update() {
-    /*setInterval(function() {
-        player.energy += player.energyRegeneration;
-        components[0].update(player.energy);
-    }, 1000);*/
     player.ship.rotate(mouseX, mouseY, 90);
     checkMovement();
     checkColisions();
@@ -249,6 +256,8 @@ function checkColisions() {
         for (var enemy of enemies) {
             if (laser.hitTestCircle(enemy) && laser.currState === laser.states.green_ball) {
                 if (enemy.health - laser.damage <= 0) {
+                    player.energy+=2;
+                    components[0].update(player.energy);
                     var enemyExplosion = new Explosion(gSpriteSheets['assets//explosion.png'],
                         enemy.x, enemy.y, enemy.width, enemy.height);
                     enemy.active = false;
@@ -260,6 +269,7 @@ function checkColisions() {
                     enemy.health -= laser.damage;
                 }
                 laser.active = false;
+                
                 break;
             }
         }
@@ -372,6 +382,7 @@ function endGame() {
     window.clearInterval(updateInterval);
     window.clearInterval(spawnShortInterval);
     window.clearInterval(spawnLongInterval);
+    window.clearInterval(energyRegenerationInterval);
     alert("Game over");
     document.location.reload();
 }
